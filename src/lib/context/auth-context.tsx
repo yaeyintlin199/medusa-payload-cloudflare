@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useCallback } from 'react'
-import { AdminUser } from '@types/auth'
+import type { AdminUser } from '@/types/auth'
 
 interface AuthContextType {
   user: AdminUser | null

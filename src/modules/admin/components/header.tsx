@@ -3,8 +3,8 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import type { AdminUser } from '@/types/auth'
 import { useAuth } from '@lib/context/auth-context'
-import { AdminUser } from '@types/auth'
 import { logoutAdmin } from '@lib/data/admin-auth'
 
 interface AdminHeaderProps {
