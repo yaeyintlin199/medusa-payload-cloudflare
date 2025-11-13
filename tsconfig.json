@@ -37,6 +37,9 @@
       "@pages/*": [
         "pages/*"
       ],
+      "@types/*": [
+        "types/*"
+      ],
       "@payload-config": [
         "./payload.config.ts"
       ]
