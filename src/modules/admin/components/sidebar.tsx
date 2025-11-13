@@ -58,9 +58,9 @@ export function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
       permission: 'products:read',
     },
     {
-      label: 'Analytics',
-      href: '/admin/analytics',
-      icon: '📈',
+      label: 'Reports',
+      href: '/admin/reports',
+      icon: '📊',
       permission: 'analytics:read',
     },
     {

@@ -1,6 +1,6 @@
 'use server'
 
-import { AdminUser, AdminRole } from '@types/auth'
+import type { AdminUser, AdminRole } from '@/types/auth'
 import { cookies as nextCookies } from 'next/headers'
 import { revalidateTag } from 'next/cache'
 

@@ -1,15 +1,14 @@
 'use client'
 
-import React from 'react'
 import { ProtectedRoute } from '@lib/context/protected-route'
 import { AdminLayout } from '@modules/admin/dashboard/admin-layout'
-import { DashboardContent } from '@modules/admin/pages/dashboard'
+import { CategoriesContent } from '@modules/admin/pages/categories'
 
-export default function AdminPage() {
+export default function CategoriesPage() {
   return (
     <ProtectedRoute>
       <AdminLayout>
-        <DashboardContent />
+        <CategoriesContent />
       </AdminLayout>
     </ProtectedRoute>
   )
