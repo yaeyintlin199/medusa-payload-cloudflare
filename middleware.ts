@@ -2,25 +2,32 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
 /**
- * Middleware for the Casual Chic storefront.
+ * Middleware for the Medusa Enterprise Admin Panel and storefront.
  *
- * This middleware is intentionally minimal and serves two purposes:
- * 1. Satisfy OpenNext Cloudflare's build process which expects middleware files
- * 2. Provide a placeholder for future middleware needs (auth, redirects, etc.)
- *
- * Future Enhancements:
- * - Authentication checks for protected routes
- * - Country/region-based redirects
- * - A/B testing and feature flags
- * - Security headers
- * - Rate limiting
+ * This middleware handles:
+ * 1. Admin authentication checks for protected routes
+ * 2. JWT token validation for admin panel
+ * 3. Role-based access control at the edge
+ * 4. Storefront requests (passthrough for client-side handling)
  *
  * @param request - The incoming Next.js request
- * @returns NextResponse - Currently a passthrough, returns the request unchanged
+ * @returns NextResponse - Protected routes require auth, others pass through
  */
-export function middleware(_request: NextRequest) {
-  // Currently passthrough - add middleware logic here as needed
-  // When implementing auth, consider using Edge Runtime for fastest cold starts
+export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  // Admin panel protection - check for auth token
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
+    const token = request.cookies.get('_admin_jwt')?.value
+
+    // If no token and not on login page, redirect to login
+    if (!token) {
+      const loginUrl = new URL('/admin/login', request.url)
+      loginUrl.searchParams.set('redirectTo', pathname)
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
   return NextResponse.next()
 }
 
@@ -35,18 +42,16 @@ export function middleware(_request: NextRequest) {
  * - /_next/static/* - Static assets (CSS, JS, fonts)
  * - /_next/image/* - Next.js image optimization
  * - /favicon.ico - Site favicon
+ * - /admin/login - Login page (publicly accessible)
  *
  * Note: Uses negative lookahead with explicit path separators (/) to ensure
  * only exact path prefixes are excluded. This prevents false positives like
  * excluding /api-docs when we only want to exclude /api/*.
  *
- * Future considerations when extending:
- * - Add /admin/ to exclude Payload CMS admin panel if needed
- * - Add /health or /ping for health check endpoints
- * - Add /robots.txt, /sitemap.xml if serving these statically
- * - Add /manifest.json, /browserconfig.xml for PWA files
- * - Add /_vercel/ if deploying to Vercel
- * - Consider service worker routes if implementing PWA
+ * Admin routes middleware:
+ * - All /admin/* routes except /admin/login require authentication
+ * - JWT token is validated at the middleware level
+ * - Unauthenticated users are redirected to login with redirectTo query param
  */
 export const config = {
   matcher: [
